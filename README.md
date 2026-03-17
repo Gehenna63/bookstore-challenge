@@ -166,20 +166,20 @@ Response `200 OK`:
 
 The current code works but could be better structured. Improve the codebase — reorganize, extract, clean up — whatever you think makes it more maintainable.
 
-The API endpoints and their responses should remain the same. We're interested in the choices you make and why.
+The API endpoints should remain the same. We're interested in the choices you make and why.
 
 ### 2. Add Feature: Book Loans
 
 Add the ability to borrow and return books:
 
-- `POST /api/books/{uuid}/borrow` — Borrow a book
+- `POST /api/books/{uuid}/borrow` — Borrow a book (requires a `borrower` name)
 - `POST /api/books/{uuid}/return` — Return a book
 
 Rules:
 
 - A book that is already borrowed cannot be borrowed again
 - A book that is not borrowed cannot be returned
-- The `GET /api/books/{uuid}` endpoint should show whether a book is available or borrowed
+- The `GET /api/books/{uuid}` endpoint should show whether a book is available or borrowed, and who has it
 - The `GET /api/books` endpoint should support an `available` filter (e.g., `?available=true`)
 - Invalid operations should return appropriate HTTP status codes and clear error messages
 
