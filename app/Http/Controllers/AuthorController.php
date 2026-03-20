@@ -6,9 +6,11 @@ use App\Models\Author;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Ramsey\Uuid\Uuid;
+use App\Traits\ApiResponses;
 
 class AuthorController extends Controller
 {
+    use ApiResponses;
     public function store(Request $request): JsonResponse
     {
         $validated = $request->validate([
@@ -20,13 +22,13 @@ class AuthorController extends Controller
         $author->name = $validated['name'];
         $author->save();
 
-        return response()->json($author, 201);
+        return $this->success($author, 201);
     }
 
     public function index(): JsonResponse
     {
         $authors = Author::all();
 
-        return response()->json(['data' => $authors], 200);
+        return $this->ok($authors);
     }
 }

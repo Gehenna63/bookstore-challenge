@@ -7,9 +7,12 @@ use App\Models\Book;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Ramsey\Uuid\Uuid;
+use App\Traits\ApiResponses;
 
 class BookController extends Controller
 {
+    use ApiResponses;
+
     public function store(Request $request): JsonResponse
     {
         $validated = $request->validate([
@@ -30,7 +33,7 @@ class BookController extends Controller
 
         $book->load('author');
 
-        return response()->json($book, 201);
+        return $this->success($book, 201);
     }
 
     public function index(Request $request): JsonResponse
@@ -54,7 +57,7 @@ class BookController extends Controller
 
         $books = $query->get();
 
-        return response()->json(['data' => $books], 200);
+        return $this->ok($books);
     }
 
     public function show(string $uuid): JsonResponse
@@ -65,6 +68,6 @@ class BookController extends Controller
             return response()->json(['message' => 'Book not found.'], 404);
         }
 
-        return response()->json($book, 200);
+        return $this->ok($book);
     }
 }
