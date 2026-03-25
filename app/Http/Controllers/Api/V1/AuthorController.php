@@ -8,19 +8,19 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Ramsey\Uuid\Uuid;
 use App\Traits\ApiResponses;
+use App\Requests\Api\V1\StoreAuthorRequest;
 
 class AuthorController extends Controller
 {
     use ApiResponses;
-    public function store(Request $request): JsonResponse
+    
+    public function store(StoreAuthorRequest $request): JsonResponse
     {
-        $validated = $request->validate([
-            'name' => 'required|string|max:255',
-        ]);
+        $request->validated($request->all());
 
         $author = new Author();
         $author->uuid = Uuid::uuid4()->toString();
-        $author->name = $validated['name'];
+        $author->name = $request->name;
         $author->save();
 
         return $this->success($author, 201);

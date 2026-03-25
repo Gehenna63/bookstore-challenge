@@ -9,25 +9,22 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Ramsey\Uuid\Uuid;
 use App\Traits\ApiResponses;
+use App\Requests\Api\V1\StoreBookRequest;
 
 class BookController extends Controller
 {
     use ApiResponses;
 
-    public function store(Request $request): JsonResponse
+    public function store(StoreBookRequest $request): JsonResponse
     {
-        $validated = $request->validate([
-            'title' => 'required|string|max:255',
-            'isbn' => 'required|string|max:20',
-            'author_uuid' => 'required|string',
-        ]);
-
-        $author = Author::where('uuid', $validated['author_uuid'])->first();
+        $request->validated($request->all());
+        
+        $author = Author::where('uuid', $request->author_uuid)->first();
 
         $book = new Book();
         $book->uuid = Uuid::uuid4()->toString();
-        $book->title = $validated['title'];
-        $book->isbn = $validated['isbn'];
+        $book->title = $request->title;
+        $book->isbn = $request->isbn;
         $book->author_id = $author->id;
         $book->is_active = true;
         $book->save();
