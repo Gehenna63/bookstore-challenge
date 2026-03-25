@@ -9,12 +9,18 @@ use Illuminate\Http\Request;
 use Ramsey\Uuid\Uuid;
 use App\Traits\ApiResponses;
 use App\Requests\Api\V1\StoreAuthorRequest;
+use App\Http\Resources\V1\AuthorResource;
 
 class AuthorController extends Controller
 {
     use ApiResponses;
     
-    public function store(StoreAuthorRequest $request): JsonResponse
+    public function index()
+    {
+        return AuthorResource::collection(Author::paginate());
+    }
+
+    public function store(StoreAuthorRequest $request)
     {
         $request->validated($request->all());
 
@@ -23,13 +29,6 @@ class AuthorController extends Controller
         $author->name = $request->name;
         $author->save();
 
-        return $this->success($author, 201);
-    }
-
-    public function index(): JsonResponse
-    {
-        $authors = Author::all();
-
-        return $this->ok($authors);
+        return new AuthorResource($author);
     }
 }
