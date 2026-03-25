@@ -49,7 +49,7 @@ class BookController extends Controller
             if ($author) {
                 $query->where('author_id', $author->id);
             } else {
-                return response()->json(['data' => []], 200);
+                return $this->ok([]);
             }
         }
 
@@ -63,7 +63,7 @@ class BookController extends Controller
         $book = Book::with('author')->where('uuid', $uuid)->first();
 
         if (!$book) {
-            return response()->json(['message' => 'Book not found.'], 404);
+            return $this->error("Book not found.", 404);
         }
 
         return $this->ok($book);
